@@ -1,0 +1,26 @@
+{
+  "name": "blogging-node-graphql",
+  "version": "1.0.0",
+  "description": "Blogging application using node and graphql",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alhaji-aki/blogging-node-graphql.git"
+  },
+  "keywords": [
+    "graphql",
+    "blog",
+    "node"
+  ],
+  "author": {
+    "name": "Abdul Kudus Issah",
+    "email": "abdulkudus2922@gmail.com"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alhaji-aki/blogging-node-graphql/issues"
+  },
+  "homepage": "https://github.com/alhaji-aki/blogging-node-graphql#readme"
+}
