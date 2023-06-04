@@ -2,13 +2,6 @@
   "name": "blogging-node-graphql",
   "version": "1.0.0",
   "description": "Blogging application using node and graphql",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alhaji-aki/blogging-node-graphql.git"
-  },
   "keywords": [
     "graphql",
     "blog",
@@ -22,5 +15,41 @@
   "bugs": {
     "url": "https://github.com/alhaji-aki/blogging-node-graphql/issues"
   },
-  "homepage": "https://github.com/alhaji-aki/blogging-node-graphql#readme"
+  "homepage": "https://github.com/alhaji-aki/blogging-node-graphql#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alhaji-aki/blogging-node-graphql.git"
+  },
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"tsc --watch\" \"nodemon -q dist/index.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.3",
+    "express": "^4.18.2",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.8.0",
+    "json-colorizer": "^2.2.2",
+    "mongoose": "^7.2.2",
+    "winston": "^3.9.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.2.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "concurrently": "^8.1.0",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.22",
+    "rimraf": "^5.0.1",
+    "typescript": "<=5.1.0"
+  }
 }
