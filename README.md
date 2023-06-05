@@ -1,8 +1,10 @@
 # Blogging Backend
+
 Blogging application using node and graphql
 
 ## Features
-1. Authentication 
+
+1. Authentication
    - [ ] Sign Up
    - [ ] Sign In
    - [ ] Forgot Password
@@ -32,4 +34,5 @@ Blogging application using node and graphql
    - [ ] Notify users when their posts have been commented on.
    - [ ] Notify other users when posts they commented on receive new comments
    - [ ] Users can mute notifications from their posts or posts they commented on
+
 ## [License](LICENSE.md)
