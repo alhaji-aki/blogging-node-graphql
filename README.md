@@ -15,7 +15,6 @@ Blogging application using node and graphql
    - [ ] Update Posts (authenticated users and only user who created the post)
    - [ ] Delete Posts (authenticated user who created the post and admin)
    - [ ] Authenticated users can get all their posts and filter by draft, submitted or published
-   - [ ] Authenticated users can report posts
    - [ ] Admin can publish posts
    - [ ] Posts have a status: draft, submitted and published
    - [ ] Posts submitted by admins are published automatically
@@ -25,7 +24,6 @@ Blogging application using node and graphql
    - [ ] Read Post Comments (public routes)
    - [ ] Update Comment (authenticated users and only user who created the comment)
    - [ ] Delete Comment (authenticed user who created the comment and admin)
-   - [ ] Authenticated users can report comments
 4. Users
    - [ ] Admins can view all users
    - [ ] Admins can make other users admin

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export default async () => {
+export const getConnectionString = (): string => {
   let url = process.env.DB_URL;
   const host = process.env.DB_HOST;
   const port = process.env.DB_PORT;
@@ -14,6 +14,12 @@ export default async () => {
 
     url = `mongodb://${credentials}${address}/${database}`;
   }
+
+  return url;
+};
+
+export default async () => {
+  const url = getConnectionString();
 
   return await mongoose.connect(url);
 };

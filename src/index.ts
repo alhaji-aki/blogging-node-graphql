@@ -1,15 +1,13 @@
-import express, { Express } from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
 import logger from './config/logger';
 import database from './config/database';
-import { graphqlHTTP } from 'express-graphql';
-import schema from './schema/schema';
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import dateScaler from './schema/date.scaler';
+import typeDefs from './schema/schema';
+import * as postResolvers from './resolvers/post.resolver';
 
 dotenv.config();
-
-const app: Express = express();
-const port = process.env.PORT || 5000;
 
 async function bootstrap() {
   try {
@@ -20,19 +18,32 @@ async function bootstrap() {
     return;
   }
 
-  app.use(cors());
+  try {
+    const port = +process.env.PORT || 5000;
 
-  app.use(
-    '/graphql',
-    graphqlHTTP({
-      schema,
-      graphiql: process.env.NODE_ENV === 'development',
-    }),
-  );
+    const resolvers = {
+      Date: dateScaler,
+      Query: {
+        ...postResolvers,
+      },
+    };
 
-  app.listen(port, () => {
-    logger.debug(`Server is running at http://localhost:${port}`);
-  });
+    // create an apollo server
+    const server = new ApolloServer({
+      typeDefs,
+      resolvers,
+      introspection: process.env.NODE_ENV === 'development',
+    });
+
+    // start the apollo server
+    const { url } = await startStandaloneServer(server, {
+      listen: { port },
+    });
+
+    logger.debug(`🚀  Server ready at: ${url}`);
+  } catch (error) {
+    logger.error('Unable to start server', error);
+  }
 }
 
 bootstrap();
