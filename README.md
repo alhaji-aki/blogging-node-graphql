@@ -36,5 +36,6 @@ Blogging application using node and graphql
 ## Research on
 
 - [ ] How to handle item not found exceptions.
+- [ ] Add pagination
 
 ## [License](LICENSE.md)
