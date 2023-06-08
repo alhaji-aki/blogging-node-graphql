@@ -2,34 +2,49 @@ import Post from '../../models/Post';
 
 export default {
   Query: {
-    async getAuthenticatedUsersPosts() {
-      // TODO:
-    },
-    async getAuthenticatedUsersPost() {
-      // TODO:
-    },
+    // async getAuthenticatedUsersPosts() {
+    // TODO: add filters {search, status} and sorters {order by views or latest}
+    // TODO: get all posts for the authenticated user
+    // TODO: this endpoint cannot contain comments of the posts
+    //   // TODO:
+    // },
     async getPosts(): Promise<Array<typeof Post>> {
-      return await Post.find();
+      // TODO: add filters {search} and sorters {order by views or latest}
+      // TODO: this endpoint cannot contain comments of the posts
+      return await Post.find({})
+        .where('published_at')
+        .ne(null)
+        .populate('user')
+        .exec();
     },
-    async getPost(_, args): Promise<typeof Post> {
-      return await Post.findById(args.id);
-    },
-    async getUserPosts() {
-      // TODO:
+    // async getUserPosts() {
+    // TODO: add filters {search} and sorters {order by views or latest}
+    // TODO: get published posts for the user
+    // TODO: this endpoint cannot contain comments of the posts
+    //   // TODO:
+    // },
+    async getPost(_, { id }): Promise<typeof Post> {
+      // TODO: unauthenticated users can view all published posts
+      // TODO: authenticated users can view unpublished posts that are theirs
+      // TODO: this endpoint can contain comments of the post
+      return await Post.findById(id)
+        .populate('user')
+        .populate({ path: 'comments', populate: { path: 'user' } })
+        .exec();
     },
   },
   Mutation: {
-    async createPost() {
-      // TODO:
-    },
-    async updatePost() {
-      // TODO:
-    },
-    async deletePost() {
-      // TODO:
-    },
-    async publishPost() {
-      // TODO:
-    },
+    // async createPost() {
+    //   // TODO:
+    // },
+    // async updatePost() {
+    //   // TODO:
+    // },
+    // async deletePost() {
+    //   // TODO:
+    // },
+    // async publishPost() {
+    //   // TODO:
+    // },
   },
 };

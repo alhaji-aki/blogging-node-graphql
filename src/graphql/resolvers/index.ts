@@ -10,11 +10,11 @@ const resolvers = {
     ...commentResolvers.Query,
     ...userResolvers.Query,
   },
-  Mutation: {
-    ...postResolvers.Mutation,
-    ...commentResolvers.Mutation,
-    ...userResolvers.Mutation,
-  },
+  // Mutation: {
+  //   ...postResolvers.Mutation,
+  //   ...commentResolvers.Mutation,
+  //   ...userResolvers.Mutation,
+  // },
 };
 
 export default resolvers;
