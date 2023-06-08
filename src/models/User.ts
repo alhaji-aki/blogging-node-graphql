@@ -19,7 +19,6 @@ const schema = new Schema<User, Model<User>>(
     email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     is_admin: { type: Boolean, required: false, default: false },
-    posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
@@ -41,5 +40,11 @@ schema.pre('save', async function (next) {
 schema.methods.validatePassword = async function (password: string) {
   return bcrypt.compare(password, this.password);
 };
+
+schema.virtual('posts', {
+  ref: 'Post',
+  localField: '_id',
+  foreignField: 'user_id',
+});
 
 export default model('User', schema);

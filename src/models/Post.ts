@@ -34,7 +34,6 @@ const schema = new Schema<Post, PostModel, PostMethods>(
     meta: {
       views: { type: Number, required: false, default: 0 },
     },
-    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
@@ -46,6 +45,12 @@ schema.virtual('user', {
   localField: 'user_id',
   foreignField: '_id',
   justOne: true,
+});
+
+schema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'post_id',
 });
 
 schema.method('status', function status() {
