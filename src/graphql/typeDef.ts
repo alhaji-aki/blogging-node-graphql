@@ -1,12 +1,14 @@
 export default `#graphql
+scalar DateTime
+
 type User {
   id: ID
   name: String!
   email: String!
   is_admin: Boolean!
-  created_at: String!
-  updated_at: String!
-  suspended_at: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  suspended_at: DateTime!
 }
 
 type PrivatePost {
@@ -14,11 +16,11 @@ type PrivatePost {
   title: String!
   body: String
   status: String!
-  submitted_at: String
-  published_at: String
+  submitted_at: DateTime
+  published_at: DateTime
   meta: Meta!
-  created_at: String!
-  updated_at: String!
+  created_at: DateTime!
+  updated_at: DateTime!
   user: User!
 }
 
@@ -26,7 +28,7 @@ type PublicPost {
   id: ID
   title: String!
   body: String!
-  published_at: String!
+  published_at: DateTime!
   meta: Meta!
   user: User!
 }
@@ -34,8 +36,8 @@ type PublicPost {
 type Comment {
   id: ID
   body: String!
-  created_at: String!
-  updated_at: String!
+  created_at: DateTime!
+  updated_at: DateTime!
   user: User!
   post: PublicPost!
 }
