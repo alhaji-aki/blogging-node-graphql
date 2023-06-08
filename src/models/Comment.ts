@@ -1,4 +1,6 @@
 import { Schema, Model, model, Types } from 'mongoose';
+import './Post';
+import './User';
 
 interface Comment {
   user_id: Types.ObjectId;
@@ -18,5 +20,19 @@ const schema = new Schema<Comment, Model<Comment>>(
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
   },
 );
+
+schema.virtual('user', {
+  ref: 'User',
+  localField: 'user_id',
+  foreignField: '_id',
+  justOne: true,
+});
+
+schema.virtual('post', {
+  ref: 'Post',
+  localField: 'post_id',
+  foreignField: '_id',
+  justOne: true,
+});
 
 export default model('Comment', schema);

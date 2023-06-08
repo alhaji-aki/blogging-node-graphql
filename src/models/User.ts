@@ -1,5 +1,6 @@
 import { Schema, Model, model, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
+import './Post';
 
 interface User {
   name: string;

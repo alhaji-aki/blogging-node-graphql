@@ -1,4 +1,6 @@
 import { Schema, Model, model, Types } from 'mongoose';
+import './Comment';
+import './User';
 
 interface Meta {
   views: number;
@@ -38,6 +40,13 @@ const schema = new Schema<Post, PostModel, PostMethods>(
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
   },
 );
+
+schema.virtual('user', {
+  ref: 'User',
+  localField: 'user_id',
+  foreignField: '_id',
+  justOne: true,
+});
 
 schema.method('status', function status() {
   if (!this.submitted_at) {
