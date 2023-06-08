@@ -1,38 +1,43 @@
 export default `#graphql
-scalar Date
-
 type User {
   id: ID
   name: String!
   email: String!
   is_admin: Boolean!
-  created_at: Date!
-  updated_at: Date!
-  suspended_at: Date!
-  posts: [Post!]!
+  created_at: String!
+  updated_at: String!
+  suspended_at: String!
 }
 
-type Post {
+type PrivatePost {
   id: ID
   title: String!
   body: String
   status: String!
-  submitted_at: Date
-  published_at: Date
+  submitted_at: String
+  published_at: String
   meta: Meta!
-  created_at: Date!
-  updated_at: Date!
+  created_at: String!
+  updated_at: String!
   user: User!
-  comments: [Comment!]!
+}
+
+type PublicPost {
+  id: ID
+  title: String!
+  body: String!
+  published_at: String!
+  meta: Meta!
+  user: User!
 }
 
 type Comment {
   id: ID
   body: String!
-  created_at: Date!
-  updated_at: Date!
+  created_at: String!
+  updated_at: String!
   user: User!
-  post: Post!
+  post: PublicPost!
 }
 
 type Meta {
@@ -61,19 +66,21 @@ input UpdateUserInput {
 }
 
 type Query {
-  getPosts: [Post!]!
-  getPost: Post!
-  getPostComments: [Comment!]!
-  getUserPosts: [Post!]!
+  getAuthenticatedUsersPosts: [PrivatePost!]!
+  getAuthenticatedUsersPost(id: ID!): PrivatePost!
+  getPosts: [PublicPost!]!
+  getPost(id: ID!): PublicPost!
+  getPostComments(id: ID!): [Comment!]!
   getUsers: [User!]!
-  getUser: User!
+  getUser(id: ID!): User!
+  getUserPosts(id: ID!): [PublicPost!]!
 }
 
 type Mutation {
-  createPost(content: PostInput): Post
-  updatePost(id: ID!, content: PostInput): Post
-  deletePost(id: ID!): Post
-  publishPost(id: ID!): Post
+  createPost(content: PostInput): PrivatePost
+  updatePost(id: ID!, content: PostInput): PrivatePost
+  deletePost(id: ID!): PrivatePost
+  publishPost(id: ID!): PrivatePost
   createComment(postId: ID!, content: CommentInput): Comment
   updateComment(id: ID!, content: CommentInput): Comment
   deleteComment(id: ID!): Comment
