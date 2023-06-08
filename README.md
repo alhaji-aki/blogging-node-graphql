@@ -33,4 +33,8 @@ Blogging application using node and graphql
    - [ ] Notify other users when posts they commented on receive new comments
    - [ ] Users can mute notifications from their posts or posts they commented on
 
+## Research on
+
+- [ ] How to handle item not found exceptions.
+
 ## [License](LICENSE.md)
