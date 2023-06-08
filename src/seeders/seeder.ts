@@ -100,7 +100,7 @@ function generatePostItem(user) {
   const views = !published_at ? 0 : faker.number.int({ max: 50000000 });
 
   return {
-    userId: user._id,
+    user_id: user._id,
     title: faker.lorem.text(),
     body: faker.lorem.paragraph(),
     submitted_at,
@@ -142,8 +142,8 @@ async function createComments() {
 
 function generateCommentItem(user, post) {
   return {
-    userId: user._id,
-    postId: post._id,
+    user_id: user._id,
+    post_id: post._id,
     body: faker.lorem.paragraph(),
   };
 }

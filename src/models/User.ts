@@ -1,4 +1,4 @@
-import { Schema, Model, model } from 'mongoose';
+import { Schema, Model, model, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 interface User {
@@ -8,6 +8,7 @@ interface User {
   is_admin: boolean;
   created_at: Date;
   updated_at: Date;
+  posts: Types.ArraySubdocument;
   validatePassword(password: string): boolean;
 }
 
@@ -17,6 +18,7 @@ const schema = new Schema<User, Model<User>>(
     email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     is_admin: { type: Boolean, required: false, default: false },
+    posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

@@ -1,8 +1,8 @@
 import { Schema, Model, model, Types } from 'mongoose';
 
 interface Comment {
-  userId: Types.ObjectId;
-  postId: Types.ObjectId;
+  user_id: Types.ObjectId;
+  post_id: Types.ObjectId;
   body: string;
   created_at: Date;
   updated_at: Date;
@@ -10,8 +10,8 @@ interface Comment {
 
 const schema = new Schema<Comment, Model<Comment>>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    postId: { type: Schema.Types.ObjectId, ref: 'Post' },
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    post_id: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
     body: { type: String, required: true },
   },
   {

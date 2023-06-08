@@ -5,7 +5,7 @@ interface Meta {
 }
 
 interface Post {
-  userId: Types.ObjectId;
+  user_id: Types.ObjectId;
   title: string;
   body: string;
   submitted_at?: Date;
@@ -13,6 +13,7 @@ interface Post {
   meta: Meta;
   created_at: Date;
   updated_at: Date;
+  comments: Types.ArraySubdocument;
 }
 
 interface PostMethods {
@@ -23,7 +24,7 @@ type PostModel = Model<Post, object, PostMethods>;
 
 const schema = new Schema<Post, PostModel, PostMethods>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true },
     body: { type: String, required: true },
     submitted_at: Date,
@@ -31,6 +32,7 @@ const schema = new Schema<Post, PostModel, PostMethods>(
     meta: {
       views: { type: Number, required: false, default: 0 },
     },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
