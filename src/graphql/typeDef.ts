@@ -8,7 +8,18 @@ type User {
   is_admin: Boolean!
   created_at: DateTime!
   updated_at: DateTime!
-  suspended_at: DateTime!
+  suspended_at: DateTime
+}
+
+type SingleUser {
+  id: ID
+  name: String!
+  email: String!
+  is_admin: Boolean!
+  created_at: DateTime!
+  updated_at: DateTime!
+  suspended_at: DateTime
+  posts: [PublishedPost!]!
 }
 
 type Author {
@@ -87,12 +98,11 @@ type Meta {
 # }
 
 type Query {
-  getAuthenticatedUsersPosts: [Post!]!
-  getUserPosts(id: ID!): [PublishedPost!]!
+  # TODO: getAuthenticatedUsersPosts: [Post!]!
   getPosts: [PublishedPost!]!
   getPost(id: ID!): SinglePost!
   getUsers: [User!]!
-  getUser(id: ID!): User!
+  getUser(id: ID!): SingleUser!
 }
 
 # type Mutation {
