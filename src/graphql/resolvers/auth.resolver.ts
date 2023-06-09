@@ -48,8 +48,34 @@ export default {
         },
       };
     },
-    login() {
-      // TODO:
+    async login(_, { email, password }) {
+      // TODO: validate credentials
+
+      // get user
+      const user = await User.findOne({ email });
+
+      if (
+        !user ||
+        !(await user.validatePassword(password)) ||
+        user.suspended()
+      ) {
+        throw new GraphQLError('Invalid email or password submitted', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            argumentName: 'email',
+          },
+        });
+      }
+
+      const token = generateToken(user);
+
+      return {
+        ...user._doc,
+        id: user._id,
+        meta: {
+          token,
+        },
+      };
     },
     forgotPassword() {
       // TODO:

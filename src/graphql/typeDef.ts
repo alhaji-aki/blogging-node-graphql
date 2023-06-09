@@ -123,8 +123,8 @@ type Query {
 }
 
 type Mutation {
-  register(input: RegisterUserInput): AuthUser
-  login: User
+  register(input: RegisterUserInput!): AuthUser!
+  login(email: String!, password: String!): AuthUser!
   forgotPassword: String
   resetPassword: String
   # createPost(content: PostInput): Post

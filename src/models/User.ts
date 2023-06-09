@@ -43,6 +43,10 @@ schema.methods.validatePassword = async function (password: string) {
   return bcrypt.compare(password, this.password);
 };
 
+schema.methods.suspended = function () {
+  return !!this.suspended_at;
+};
+
 schema.virtual('posts', {
   ref: 'Post',
   localField: '_id',
