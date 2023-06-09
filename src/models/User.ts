@@ -7,6 +7,7 @@ interface User {
   email: string;
   password: string;
   is_admin: boolean;
+  suspended_at: Date;
   created_at: Date;
   updated_at: Date;
   posts: Types.ArraySubdocument;
@@ -19,6 +20,7 @@ const schema = new Schema<User, Model<User>>(
     email: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     is_admin: { type: Boolean, required: false, default: false },
+    suspended_at: { type: Schema.Types.Date, required: false },
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

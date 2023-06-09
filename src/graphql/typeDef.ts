@@ -11,6 +11,21 @@ type User {
   suspended_at: DateTime
 }
 
+type AuthUser {
+  id: ID
+  name: String!
+  email: String!
+  is_admin: Boolean!
+  created_at: DateTime!
+  updated_at: DateTime!
+  suspended_at: DateTime
+  meta: TokenInfo
+}
+
+type TokenInfo {
+  token: String!
+}
+
 type SingleUser {
   id: ID
   name: String!
@@ -86,11 +101,12 @@ type Meta {
 #   body: String
 # }
 
-# input CreateUserInput {
-#   name: String!
-#   email: String!
-#   password: String!
-# }
+input RegisterUserInput {
+  name: String!
+  email: String!
+  password: String!
+  confirm_password: String!
+}
 
 # input UpdateUserInput {
 #   name: String
@@ -98,6 +114,7 @@ type Meta {
 # }
 
 type Query {
+  getAuthenticatedUser: User!
   # TODO: getAuthenticatedUsersPosts: [Post!]!
   getPosts: [PublishedPost!]!
   getPost(id: ID!): SinglePost!
@@ -105,7 +122,11 @@ type Query {
   getUser(id: ID!): SingleUser!
 }
 
-# type Mutation {
+type Mutation {
+  register(input: RegisterUserInput): AuthUser
+  login: User
+  forgotPassword: String
+  resetPassword: String
   # createPost(content: PostInput): Post
   # updatePost(id: ID!, content: PostInput): Post
   # deletePost(id: ID!): Post
@@ -118,5 +139,5 @@ type Query {
   # updateUserPassword(id: ID!, password: String!): User
   # toggleAdmin(id: ID!, is_admin: Boolean!): User
   # toggleUserSuspension(id: ID!): User
-# }
+}
 `;
