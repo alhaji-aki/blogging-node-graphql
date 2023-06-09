@@ -38,6 +38,7 @@
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.22.2",
     "json-colorizer": "^2.2.2",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.2.2",
     "winston": "^3.9.0"
   },
