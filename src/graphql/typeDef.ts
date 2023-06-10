@@ -114,12 +114,12 @@ input RegisterUserInput {
 # }
 
 type Query {
-  getAuthenticatedUser: User!
+  getAuthenticatedUser: User! @auth
   # TODO: getAuthenticatedUsersPosts: [Post!]!
   getPosts: [PublishedPost!]!
   getPost(id: ID!): SinglePost!
-  getUsers: [User!]!
-  getUser(id: ID!): SingleUser!
+  getUsers: [User!]! @auth
+  getUser(id: ID!): SingleUser! @auth
 }
 
 type Mutation {

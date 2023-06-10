@@ -1,22 +1,11 @@
-import User from '../../models/User';
 import { GraphQLError } from 'graphql';
-import jwt from 'jsonwebtoken';
-
-function generateToken(user) {
-  return jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-    },
-    process.env.APP_KEY,
-    { expiresIn: process.env.AUTH_EXPIRES_IN },
-  );
-}
+import User from '../../models/User';
+import { generateToken } from '../../config/auth';
 
 export default {
   Query: {
-    getAuthenticatedUser() {
-      // TODO:
+    getAuthenticatedUser(_, __, context) {
+      return context.user;
     },
   },
   Mutation: {
