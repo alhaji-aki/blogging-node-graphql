@@ -29,11 +29,11 @@ type TokenInfo {
 type SingleUser {
   id: ID
   name: String!
-  email: String!
-  is_admin: Boolean!
+  email: String! @auth @admin
+  is_admin: Boolean! @auth @admin
   created_at: DateTime!
   updated_at: DateTime!
-  suspended_at: DateTime
+  suspended_at: DateTime @auth @admin
   posts: [PublishedPost!]!
 }
 
@@ -118,8 +118,8 @@ type Query {
   # TODO: getAuthenticatedUsersPosts: [Post!]!
   getPosts: [PublishedPost!]!
   getPost(id: ID!): SinglePost!
-  getUsers: [User!]! @auth
-  getUser(id: ID!): SingleUser! @auth
+  getUsers: [User!]! @auth @admin
+  getUser(id: ID!): SingleUser!
 }
 
 type Mutation {
