@@ -108,6 +108,13 @@ input RegisterUserInput {
   confirm_password: String!
 }
 
+input ResetPasswordInput {
+  token: String!
+  email: String!
+  password: String!
+  confirm_password: String!
+}
+
 # input UpdateUserInput {
 #   name: String
 #   email: String
@@ -125,8 +132,8 @@ type Query {
 type Mutation {
   register(input: RegisterUserInput!): AuthUser!
   login(email: String!, password: String!): AuthUser!
-  forgotPassword: String
-  resetPassword: String
+  forgotPassword(email: String!): String!
+  resetPassword(input: ResetPasswordInput!): String!
   # createPost(content: PostInput): Post @auth @unsuspended
   # updatePost(id: ID!, content: PostInput): Post @auth @unsuspended
   # deletePost(id: ID!): Post @auth @unsuspended

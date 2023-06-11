@@ -2,6 +2,7 @@ import postResolvers from './post.resolver';
 import commentResolvers from './comment.resolver';
 import userResolvers from './user.resolver';
 import authResolvers from './auth.resolver';
+import passwordResetResolvers from './password-reset.resolver';
 import { DateTimeISOResolver } from 'graphql-scalars';
 
 const resolvers = {
@@ -14,6 +15,7 @@ const resolvers = {
   },
   Mutation: {
     ...authResolvers.Mutation,
+    ...passwordResetResolvers.Mutation,
     //   ...postResolvers.Mutation,
     //   ...commentResolvers.Mutation,
     //   ...userResolvers.Mutation,
