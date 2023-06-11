@@ -12,6 +12,7 @@ interface User {
   updated_at: Date;
   posts: Types.ArraySubdocument;
   validatePassword(password: string): boolean;
+  suspended(): boolean;
 }
 
 const schema = new Schema<User, Model<User>>(
