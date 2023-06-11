@@ -1,6 +1,20 @@
 import { GraphQLError } from 'graphql';
+import jwt from 'jsonwebtoken';
 import User from '../../models/User';
-import { generateToken } from '../../config/auth';
+
+async function getUser(email: string) {
+  return User.findOne({ email });
+}
+
+function generateAuthToken(user) {
+  return jwt.sign(
+    {
+      id: user.id,
+    },
+    process.env.APP_KEY,
+    { expiresIn: process.env.AUTH_ACCESS_TOKEN_EXPIRES_IN || '1h' },
+  );
+}
 
 export default {
   Query: {
@@ -12,13 +26,14 @@ export default {
     async register(_, { input: { name, email, password } }) {
       // TODO: validate
 
-      const user = await User.findOne({ email });
+      const user = await getUser(email);
 
       if (user) {
         throw new GraphQLError('Email is already taken', {
           extensions: {
             code: 'BAD_USER_INPUT',
             argumentName: 'email',
+            http: { status: 422 },
           },
         });
       }
@@ -27,7 +42,7 @@ export default {
 
       const res = await newUser.save();
 
-      const token = generateToken(res);
+      const token = generateAuthToken(res);
 
       return {
         ...res._doc,
@@ -41,7 +56,7 @@ export default {
       // TODO: validate credentials
 
       // get user
-      const user = await User.findOne({ email });
+      const user = await getUser(email);
 
       if (
         !user ||
@@ -52,11 +67,12 @@ export default {
           extensions: {
             code: 'BAD_USER_INPUT',
             argumentName: 'email',
+            http: { status: 422 },
           },
         });
       }
 
-      const token = generateToken(user);
+      const token = generateAuthToken(user);
 
       return {
         ...user._doc,
@@ -65,12 +81,6 @@ export default {
           token,
         },
       };
-    },
-    forgotPassword() {
-      // TODO:
-    },
-    resetPassword() {
-      // TODO:
     },
   },
 };

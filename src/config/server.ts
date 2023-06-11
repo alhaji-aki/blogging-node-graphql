@@ -1,10 +1,11 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import jwt from 'jsonwebtoken';
 import typeDefs from '../graphql/typeDef';
 import resolvers from '../graphql/resolvers';
 import { directiveTransformers, directives } from '../graphql/directives';
-import { getAuthenticatedUser } from './auth';
+import User from '../models/User';
 
 export default async () => {
   const port = +process.env.PORT || 5000;
@@ -29,7 +30,19 @@ export default async () => {
   const { url } = await startStandaloneServer(server, {
     listen: { port },
     context: async ({ req }) => {
-      return { user: await getAuthenticatedUser(req) };
+      const token = (req.headers.authorization || '').split('Bearer ')[1];
+
+      if (!token) {
+        return {};
+      }
+
+      try {
+        const payload = jwt.verify(token, process.env.APP_KEY);
+
+        return { user: await User.findById(payload.id) };
+      } catch (error) {
+        return {};
+      }
     },
   });
 
