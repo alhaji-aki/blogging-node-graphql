@@ -31,7 +31,7 @@ type SingleUser {
   name: String!
   email: String! @auth @admin
   is_admin: Boolean! @auth @admin
-  created_at: DateTime!
+  created_at: DateTime! 
   updated_at: DateTime!
   suspended_at: DateTime @auth @admin
   posts: [PublishedPost!]!
@@ -127,17 +127,16 @@ type Mutation {
   login(email: String!, password: String!): AuthUser!
   forgotPassword: String
   resetPassword: String
-  # createPost(content: PostInput): Post
-  # updatePost(id: ID!, content: PostInput): Post
-  # deletePost(id: ID!): Post
-  # publishPost(id: ID!): Post
-  # createComment(postId: ID!, content: CommentInput): Comment
-  # updateComment(id: ID!, content: CommentInput): Comment
-  # deleteComment(id: ID!): Comment
-  # createUser(content: CreateUserInput): User
-  # updateUser(content: UpdateUserInput): User
-  # updateUserPassword(id: ID!, password: String!): User
-  # toggleAdmin(id: ID!, is_admin: Boolean!): User
-  # toggleUserSuspension(id: ID!): User
+  # createPost(content: PostInput): Post @auth @unsuspended
+  # updatePost(id: ID!, content: PostInput): Post @auth @unsuspended
+  # deletePost(id: ID!): Post @auth @unsuspended
+  # publishPost(id: ID!): Post @auth @admin
+  # createComment(postId: ID!, content: CommentInput): Comment @auth
+  # updateComment(id: ID!, content: CommentInput): Comment @auth
+  # deleteComment(id: ID!): Comment @auth
+  # updateUser(content: UpdateUserInput): User @auth @unsuspended
+  # updateUserPassword(id: ID!, password: String!): User @auth @unsuspended
+  # toggleAdmin(id: ID!, is_admin: Boolean!): User @auth @admin
+  # toggleUserSuspension(id: ID!): User @auth @admin
 }
 `;
