@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker';
 import dotenv from 'dotenv';
 dotenv.config();
-import User from '../models/User';
-import Post from '../models/Post';
+import User, { User as UserInterface } from '../models/User';
+import Post, { Post as PostInterface } from '../models/Post';
 import Comment from '../models/Comment';
 import connectDB from '../config/database';
 import logger from '../config/logger';
 
-const users: Array<typeof User> = [];
-const posts: Array<typeof Post> = [];
+const users: Array<UserInterface> = [];
+const posts: Array<PostInterface> = [];
 
 async function seed() {
   try {

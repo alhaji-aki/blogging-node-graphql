@@ -2,7 +2,9 @@ import { Schema, Model, model, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import './Post';
 
-interface User {
+export interface User {
+  _id: Types.ObjectId;
+  _doc: User;
   name: string;
   email: string;
   password: string;
@@ -11,11 +13,16 @@ interface User {
   created_at: Date;
   updated_at: Date;
   posts: Types.ArraySubdocument;
-  validatePassword(password: string): boolean;
+}
+
+interface UserMethods {
+  validatePassword(password: string): Promise<boolean>;
   suspended(): boolean;
 }
 
-const schema = new Schema<User, Model<User>>(
+type UserModel = Model<User, object, UserMethods>;
+
+const schema = new Schema<User, UserModel, UserMethods>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, index: { unique: true } },
@@ -54,4 +61,4 @@ schema.virtual('posts', {
   foreignField: 'user_id',
 });
 
-export default model('User', schema);
+export default model<User, UserModel>('User', schema);

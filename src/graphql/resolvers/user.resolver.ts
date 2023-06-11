@@ -1,14 +1,14 @@
-import User from '../../models/User';
+import User, { User as UserInterface } from '../../models/User';
 
 export default {
   Query: {
-    async getUsers(): Promise<Array<typeof User>> {
+    async getUsers(): Promise<Array<UserInterface>> {
       // TODO: only authenticated users can access this endpoint
       // TODO: only admins can get this endpoint
       // TODO: admins can filter {get only admins, search, suspended}
       return await User.find();
     },
-    async getUser(_, { id }): Promise<typeof User> {
+    async getUser(_, { id }): Promise<UserInterface> {
       // TODO: only admins can view suspended users
       // TODO: only admins should be able to see certain properties of the user (email, is_admin, suspended_at)
       return await User.findById(id)

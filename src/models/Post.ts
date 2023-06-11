@@ -6,7 +6,8 @@ interface Meta {
   views: number;
 }
 
-interface Post {
+export interface Post {
+  _id: Types.ObjectId;
   user_id: Types.ObjectId;
   title: string;
   body: string;
@@ -65,4 +66,4 @@ schema.method('status', function status() {
   return 'published';
 });
 
-export default model('Post', schema);
+export default model<Post, PostModel>('Post', schema);

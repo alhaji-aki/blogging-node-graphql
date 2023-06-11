@@ -1,4 +1,4 @@
-import Post from '../../models/Post';
+import Post, { Post as PostInterface } from '../../models/Post';
 
 export default {
   Query: {
@@ -7,7 +7,7 @@ export default {
     // TODO: get all posts for the authenticated user
     // TODO: this endpoint cannot contain comments of the posts
     // },
-    async getPosts(): Promise<Array<typeof Post>> {
+    async getPosts(): Promise<Array<PostInterface>> {
       // TODO: add filters {search} and sorters {order by views or latest}
       // TODO: this endpoint cannot contain comments of the posts
       // TODO: this should not return posts from suspended users
@@ -17,7 +17,7 @@ export default {
         .populate('user')
         .exec();
     },
-    async getPost(_, { id }): Promise<typeof Post> {
+    async getPost(_, { id }): Promise<PostInterface> {
       // TODO: unauthenticated users can view all published posts
       // TODO: authenticated users can view unpublished posts that are theirs
       // TODO: this endpoint can contain comments of the post
