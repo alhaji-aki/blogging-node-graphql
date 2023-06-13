@@ -39,7 +39,7 @@ export default async () => {
       try {
         const payload = jwt.verify(token, process.env.APP_KEY);
 
-        return { user: await User.findById(payload.id) };
+        return { authenticatedUser: await User.findById(payload.id) };
       } catch (error) {
         return {};
       }

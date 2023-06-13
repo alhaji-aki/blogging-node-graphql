@@ -17,7 +17,7 @@ export default (directiveName: string) => {
               fieldConfig.resolve || defaultFieldResolver;
 
             fieldConfig.resolve = (source, args, context, info) => {
-              const user = context.user;
+              const user = context.authenticatedUser;
               if (user && user.suspended()) {
                 throw new GraphQLError('Your account has been suspended', {
                   extensions: {

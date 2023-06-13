@@ -18,7 +18,7 @@ export default (directiveName: string) => {
               fieldConfig.resolve || defaultFieldResolver;
 
             fieldConfig.resolve = (source, args, context, info) => {
-              const user = context.user;
+              const user = context.authenticatedUser;
               if (!user || !user.is_admin) {
                 throw new GraphQLError(
                   "You don't have the required permissions to perform this action or access this data",

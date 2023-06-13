@@ -18,8 +18,8 @@ function generateAuthToken(user) {
 
 export default {
   Query: {
-    getAuthenticatedUser(_, __, context) {
-      return context.user;
+    getAuthenticatedUser(_, __, { authenticatedUser }) {
+      return authenticatedUser;
     },
   },
   Mutation: {
