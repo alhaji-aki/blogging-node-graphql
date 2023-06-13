@@ -2,7 +2,7 @@ import { GraphQLError } from 'graphql';
 import crypto from 'crypto';
 import User from '../../models/User';
 import PasswordResetToken from '../../models/PasswordResetToken';
-import sendEmail from '../../config/mailer';
+import EmailQueue from '../../queues/EmailQueue';
 
 async function getUser(email: string) {
   return User.findOne({ email });
@@ -66,21 +66,21 @@ async function validateTokenModel(tokenModel, token: string) {
   }
 }
 
-async function sendPasswordResetNotification(email: string, token: string) {
+async function dispatchPasswordResetNotification(email: string, token: string) {
   const url = `${process.env.AUTH_FRONTEND_PASSWORD_RESET_URL}?token=${token}&email=${email}`;
 
   const appName = process.env.APP_NAME;
 
-  await sendEmail(
+  await EmailQueue.add({
     email,
-    'Reset Password Notification',
-    '../templates/password-reset.hbs',
-    {
+    subject: 'Reset Password Notification',
+    template: '../templates/password-reset.hbs',
+    context: {
       url,
       appName,
       expires: process.env.AUTH_PASSWORD_RESET_EXPIRES_IN,
     },
-  );
+  });
 }
 
 export default {
@@ -100,9 +100,7 @@ export default {
 
       await tokenModel.save();
 
-      // TODO: dispatch job to send notification
-
-      await sendPasswordResetNotification(email, token);
+      await dispatchPasswordResetNotification(email, token);
 
       return 'Password reset link sent to your email.';
     },
