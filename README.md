@@ -5,10 +5,10 @@ Blogging application using node and graphql
 ## Features
 
 1. Authentication
-   - [ ] Sign Up
-   - [ ] Sign In
-   - [ ] Forgot Password
-   - [ ] Reset Password
+   - [x] Sign Up
+   - [x] Sign In
+   - [x] Forgot Password
+   - [x] Reset Password
 2. Posts
    - [ ] Create Posts (authenticated users only)
    - [x] Read Posts (public routes)
