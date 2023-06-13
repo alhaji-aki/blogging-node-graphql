@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql';
 import Post, { Post as PostInterface } from '../../models/Post';
+import User from '../../models/User';
 
 function canViewPost(user, post) {
   if (post.user.suspended()) {
@@ -26,11 +27,14 @@ export default {
     // },
     async getPosts(): Promise<Array<PostInterface>> {
       // TODO: add filters {search} and sorters {order by views or latest}
-      // TODO: this endpoint cannot contain comments of the posts
-      // TODO: this should not return posts from suspended users
-      return await Post.find({})
-        .where('published_at')
-        .ne(null)
+      const suspendedUsers = (
+        await User.find({}).where('suspended_at').ne(null).select('_id').exec()
+      ).map((doc) => doc._id);
+
+      return await Post.find({
+        user_id: { $not: { $in: suspendedUsers } },
+        published_at: { $not: { $eq: null } },
+      })
         .populate('user')
         .exec();
     },
