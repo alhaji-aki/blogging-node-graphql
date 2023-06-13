@@ -21,6 +21,7 @@ export interface Post {
 
 interface PostMethods {
   status(): string;
+  published(): boolean;
 }
 
 type PostModel = Model<Post, object, PostMethods>;
@@ -64,6 +65,10 @@ schema.method('status', function status() {
   }
 
   return 'published';
+});
+
+schema.method('published', function status() {
+  return this.status() === 'published';
 });
 
 export default model<Post, PostModel>('Post', schema);

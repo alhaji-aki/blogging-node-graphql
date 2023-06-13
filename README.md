@@ -16,7 +16,7 @@ Blogging application using node and graphql
    - [ ] Delete Posts (authenticated user who created the post and admin)
    - [ ] Authenticated users can get all their posts and filter by draft, submitted or published
    - [ ] Admin can publish posts
-   - [ ] Posts have a status: draft, submitted and published
+   - [x] Posts have a status: draft, submitted and published
    - [ ] Posts submitted by admins are published automatically
    - [ ] Keep views count on posts
 3. CRUD for Comments
@@ -37,7 +37,6 @@ Blogging application using node and graphql
 
 ## Research on
 
-- [ ] How to handle item not found exceptions.
 - [ ] Add pagination
 
 ## [License](LICENSE.md)

@@ -1,4 +1,21 @@
+import { GraphQLError } from 'graphql';
 import Post, { Post as PostInterface } from '../../models/Post';
+
+function canViewPost(user, post) {
+  if (post.user.suspended()) {
+    return false;
+  }
+
+  if (!user && !post.published()) {
+    return false;
+  }
+
+  if ((post.user_id !== user.id || !user.is_admin) && !post.published()) {
+    return false;
+  }
+
+  return true;
+}
 
 export default {
   Query: {
@@ -17,16 +34,22 @@ export default {
         .populate('user')
         .exec();
     },
-    async getPost(_, { id }): Promise<PostInterface> {
-      // TODO: unauthenticated users can view all published posts
-      // TODO: authenticated users can view unpublished posts that are theirs
-      // TODO: this endpoint can contain comments of the post
-      // TODO: this should not return posts from suspended users
-      // TODO: admin can view post from suspended user
-      return await Post.findById(id)
+    async getPost(_, { id }, { authenticatedUser }): Promise<PostInterface> {
+      const post = await Post.findById(id)
         .populate('user')
         .populate({ path: 'comments', populate: { path: 'user' } })
         .exec();
+
+      if (!post || !canViewPost(authenticatedUser, post)) {
+        throw new GraphQLError('Post not found.', {
+          extensions: {
+            code: 'ITEM_NOT_FOUND',
+            http: { status: 404 },
+          },
+        });
+      }
+
+      return post;
     },
   },
   Mutation: {
