@@ -2,7 +2,7 @@ export default `#graphql
 scalar DateTime
 
 type User {
-  id: ID
+  id: ID!
   name: String!
   email: String!
   is_admin: Boolean!
@@ -12,7 +12,7 @@ type User {
 }
 
 type AuthUser {
-  id: ID
+  id: ID!
   name: String!
   email: String!
   is_admin: Boolean!
@@ -27,7 +27,7 @@ type TokenInfo {
 }
 
 type SingleUser {
-  id: ID
+  id: ID!
   name: String!
   email: String! @auth @admin
   is_admin: Boolean! @auth @admin
@@ -38,13 +38,13 @@ type SingleUser {
 }
 
 type Author {
-  id: ID
+  id: ID!
   name: String!
   created_at: DateTime!
 }
 
 type Post {
-  id: ID
+  id: ID!
   title: String!
   body: String
   status: String!
@@ -57,7 +57,7 @@ type Post {
 }
 
 type PublishedPost {
-  id: ID
+  id: ID!
   title: String!
   body: String!
   published_at: DateTime!
@@ -66,7 +66,7 @@ type PublishedPost {
 }
 
 type SinglePost {
-  id: ID
+  id: ID!
   title: String!
   body: String
   status: String!
@@ -80,7 +80,7 @@ type SinglePost {
 }
 
 type Comment {
-  id: ID
+  id: ID!
   body: String!
   created_at: DateTime!
   updated_at: DateTime!
