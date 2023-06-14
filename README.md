@@ -14,11 +14,11 @@ Blogging application using node and graphql
    - [x] Read Posts (public routes)
    - [x] Update Posts (authenticated users and only user who created the post and users cannot update published posts)
    - [x] Delete Posts (authenticated user who created the post and admin)
-   - [ ] user can submit their posts
+   - [x] user can submit their posts
    - [ ] Authenticated users can get all their posts and filter by draft, submitted or published
-   - [ ] Admin can publish posts
+   - [x] Admin can publish posts
    - [x] Posts have a status: draft, submitted and published
-   - [ ] Posts submitted by admins are published automatically
+   - [x] Posts submitted by admins are published automatically
    - [ ] Keep views count on posts
 3. CRUD for Comments
    - [ ] Create Comment On Post (authenticated users only)

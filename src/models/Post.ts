@@ -22,6 +22,8 @@ export interface Post {
 
 interface PostMethods {
   status(): string;
+  completed(): boolean;
+  submitted(): boolean;
   published(): boolean;
 }
 
@@ -57,19 +59,27 @@ schema.virtual('comments', {
 });
 
 schema.method('status', function status() {
-  if (!this.submitted_at) {
+  if (!this.submitted() && !this.published()) {
     return 'draft';
   }
 
-  if (this.submitted_at && !this.published_at) {
+  if (this.submitted() && !this.published()) {
     return 'submitted';
   }
 
   return 'published';
 });
 
+schema.method('completed', function status() {
+  return this.title && this.body;
+});
+
+schema.method('submitted', function status() {
+  return !!this.submitted_at;
+});
+
 schema.method('published', function status() {
-  return this.status() === 'published';
+  return !!this.published_at;
 });
 
 export default model<Post, PostModel>('Post', schema);

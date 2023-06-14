@@ -49,4 +49,66 @@ export default {
 
     return true;
   },
+  submit(user, post): boolean {
+    if (!post) {
+      throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
+    }
+
+    if (post.user.id !== user.id) {
+      throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
+    }
+
+    if (post.published()) {
+      throwException(
+        'This post has already been published.',
+        'UNAUTHORISED',
+        403,
+      );
+    }
+
+    if (!post.completed()) {
+      throwException(
+        'Post information not completed. Make sure post has a title and body.',
+        'UNAUTHORISED',
+        403,
+      );
+    }
+
+    return true;
+  },
+  publish(user, post): boolean {
+    if (!post) {
+      throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
+    }
+
+    if (post.user.suspended()) {
+      throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
+    }
+
+    if (!post.completed()) {
+      throwException(
+        'Post information not completed. Make sure post has a title and body.',
+        'UNAUTHORISED',
+        403,
+      );
+    }
+
+    if (!post.submitted()) {
+      throwException(
+        'You can only publish submitted posts.',
+        'UNAUTHORISED',
+        403,
+      );
+    }
+
+    if (post.published()) {
+      throwException(
+        'This post has already been published.',
+        'UNAUTHORISED',
+        403,
+      );
+    }
+
+    return true;
+  },
 };

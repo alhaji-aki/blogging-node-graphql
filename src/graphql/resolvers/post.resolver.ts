@@ -117,11 +117,43 @@ export default {
 
       return post;
     },
-    // async publishPost() {
-    //   // TODO:
-    // },
-    // async submitPost() {
-    //   // TODO:
-    // },
+    async submitPost(_, { id }, { authenticatedUser }): Promise<PostInterface> {
+      const post = await Post.findById(id).populate('user').exec();
+
+      PostPolicy.submit(authenticatedUser, post);
+
+      const submitted_at = new Date();
+      let published_at = null;
+
+      if (post.user.is_admin) {
+        published_at = submitted_at;
+      }
+
+      post.submitted_at = submitted_at;
+      post.published_at = published_at;
+
+      await post.save();
+
+      // TODO: dispatch job to send notification to admins on new posts to be published or published
+
+      return post;
+    },
+    async publishPost(
+      _,
+      { id },
+      { authenticatedUser },
+    ): Promise<PostInterface> {
+      const post = await Post.findById(id).populate('user').exec();
+
+      PostPolicy.publish(authenticatedUser, post);
+
+      post.published_at = new Date();
+
+      await post.save();
+
+      // TODO: dispatch job to send notification to user published post
+
+      return post;
+    },
   },
 };

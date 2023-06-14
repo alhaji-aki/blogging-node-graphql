@@ -118,8 +118,8 @@ type Mutation {
   createPost(input: CreatePostInput!): Post! @auth(isAdmin: false, allowSuspendedUser: false)
   updatePost(id: ID!, input: UpdatePostInput!): Post! @auth
   deletePost(id: ID!): Post! @auth
-  # submitPost(id: ID!): Post @auth
-  # publishPost(id: ID!): Post @auth(isAdmin: true)
+  submitPost(id: ID!): Post! @auth
+  publishPost(id: ID!): Post! @auth(isAdmin: true)
   # createComment(postId: ID!, content: CommentInput): Comment @auth
   # updateComment(id: ID!, content: CommentInput): Comment @auth
   # deleteComment(id: ID!): Comment @auth
