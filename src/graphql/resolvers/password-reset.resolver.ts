@@ -104,8 +104,6 @@ export default {
 
       await sendPasswordResetNotification(email, token);
 
-      console.log(token);
-
       return 'Password reset link sent to your email.';
     },
     async resetPassword(_, { input: { token, email, password } }) {
