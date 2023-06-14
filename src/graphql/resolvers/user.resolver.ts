@@ -1,23 +1,39 @@
+import { GraphQLError } from 'graphql';
 import User, { User as UserInterface } from '../../models/User';
+
+function canViewUser(authenticatedUser, user) {
+  if (user.suspended() && (!authenticatedUser || !authenticatedUser.is_admin)) {
+    return false;
+  }
+
+  return true;
+}
 
 export default {
   Query: {
     async getUsers(): Promise<Array<UserInterface>> {
-      // TODO: only authenticated users can access this endpoint
-      // TODO: only admins can get this endpoint
       // TODO: admins can filter {get only admins, search, suspended}
       return await User.find();
     },
-    async getUser(_, { id }): Promise<UserInterface> {
-      // TODO: only admins can view suspended users
-      // TODO: only admins should be able to see certain properties of the user (email, is_admin, suspended_at)
-      return await User.findById(id)
+    async getUser(_, { id }, { authenticatedUser }): Promise<UserInterface> {
+      const user = await User.findById(id)
         .populate({
           path: 'posts',
           match: { published_at: { $ne: null } },
           populate: { path: 'user' },
         })
         .exec();
+
+      if (!user || !canViewUser(authenticatedUser, user)) {
+        throw new GraphQLError('User not found.', {
+          extensions: {
+            code: 'ITEM_NOT_FOUND',
+            http: { status: 404 },
+          },
+        });
+      }
+
+      return user;
     },
   },
   Mutation: {
