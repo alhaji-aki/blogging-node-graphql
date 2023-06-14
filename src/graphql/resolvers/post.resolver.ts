@@ -2,16 +2,19 @@ import { GraphQLError } from 'graphql';
 import Post, { Post as PostInterface } from '../../models/Post';
 import User from '../../models/User';
 
-function canViewPost(user, post) {
+function canViewPost(authenticatedUser, post) {
   if (post.user.suspended()) {
     return false;
   }
 
-  if (!user && !post.published()) {
+  if (!authenticatedUser && !post.published()) {
     return false;
   }
 
-  if ((post.user_id !== user.id || !user.is_admin) && !post.published()) {
+  if (
+    (post.user_id !== authenticatedUser.id || !authenticatedUser.is_admin) &&
+    !post.published()
+  ) {
     return false;
   }
 
