@@ -29,11 +29,11 @@ type TokenInfo {
 type SingleUser {
   id: ID!
   name: String!
-  email: String! @auth @admin
-  is_admin: Boolean! @auth @admin
+  email: String! @auth(isAdmin: true)
+  is_admin: Boolean! @auth(isAdmin: true)
   created_at: DateTime! 
   updated_at: DateTime!
-  suspended_at: DateTime @auth @admin
+  suspended_at: DateTime @auth(isAdmin: true)
   posts: [PublishedPost!]!
 }
 
@@ -121,11 +121,11 @@ input ResetPasswordInput {
 # }
 
 type Query {
-  getAuthenticatedUser: User! @auth
+  getAuthenticatedUser: User! @auth(allowSuspendedUser: true)
   # TODO: getAuthenticatedUsersPosts: [Post!]!
   getPosts: [PublishedPost!]!
   getPost(id: ID!): SinglePost!
-  getUsers: [User!]! @auth @admin
+  getUsers: [User!]! @auth(isAdmin: true)
   getUser(id: ID!): SingleUser!
 }
 
@@ -134,16 +134,16 @@ type Mutation {
   login(email: String!, password: String!): AuthUser!
   forgotPassword(email: String!): String!
   resetPassword(input: ResetPasswordInput!): String!
-  # createPost(content: PostInput): Post @auth @unsuspended
-  # updatePost(id: ID!, content: PostInput): Post @auth @unsuspended
-  # deletePost(id: ID!): Post @auth @unsuspended
-  # publishPost(id: ID!): Post @auth @admin
+  # createPost(content: PostInput): Post @auth
+  # updatePost(id: ID!, content: PostInput): Post @auth
+  # deletePost(id: ID!): Post @auth
+  # publishPost(id: ID!): Post @auth(isAdmin: true)
   # createComment(postId: ID!, content: CommentInput): Comment @auth
   # updateComment(id: ID!, content: CommentInput): Comment @auth
   # deleteComment(id: ID!): Comment @auth
-  # updateUser(content: UpdateUserInput): User @auth @unsuspended
-  # updateUserPassword(id: ID!, password: String!): User @auth @unsuspended
-  # toggleAdmin(id: ID!, is_admin: Boolean!): User @auth @admin
-  # toggleUserSuspension(id: ID!): User @auth @admin
+  # updateUser(content: UpdateUserInput): User @auth
+  # updateUserPassword(id: ID!, password: String!): User @auth
+  # toggleAdmin(id: ID!, is_admin: Boolean!): User @auth(isAdmin: true)
+  # toggleUserSuspension(id: ID!): User @auth(isAdmin: true)
 }
 `;
