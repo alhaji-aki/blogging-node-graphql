@@ -91,29 +91,10 @@ type Meta {
   views: Int!
 }
 
-# input PostInput {
-#   title: String
-#   body: String
-#   submit: Boolean
-# }
-
 # input CommentInput {
 #   body: String
 # }
 
-input RegisterUserInput {
-  name: String!
-  email: String!
-  password: String!
-  confirm_password: String!
-}
-
-input ResetPasswordInput {
-  token: String!
-  email: String!
-  password: String!
-  confirm_password: String!
-}
 
 # input UpdateUserInput {
 #   name: String
@@ -134,9 +115,10 @@ type Mutation {
   login(email: String!, password: String!): AuthUser!
   forgotPassword(email: String!): String!
   resetPassword(input: ResetPasswordInput!): String!
-  # createPost(content: PostInput): Post @auth
-  # updatePost(id: ID!, content: PostInput): Post @auth
-  # deletePost(id: ID!): Post @auth
+  createPost(input: CreatePostInput!): Post! @auth(isAdmin: false, allowSuspendedUser: false)
+  updatePost(id: ID!, input: UpdatePostInput!): Post! @auth
+  deletePost(id: ID!): Post! @auth
+  # submitPost(id: ID!): Post @auth
   # publishPost(id: ID!): Post @auth(isAdmin: true)
   # createComment(postId: ID!, content: CommentInput): Comment @auth
   # updateComment(id: ID!, content: CommentInput): Comment @auth
@@ -145,5 +127,30 @@ type Mutation {
   # updateUserPassword(id: ID!, password: String!): User @auth
   # toggleAdmin(id: ID!, is_admin: Boolean!): User @auth(isAdmin: true)
   # toggleUserSuspension(id: ID!): User @auth(isAdmin: true)
+}
+
+input RegisterUserInput {
+  name: String!
+  email: String!
+  password: String!
+  confirm_password: String!
+}
+
+input ResetPasswordInput {
+  token: String!
+  email: String!
+  password: String!
+  confirm_password: String!
+}
+
+input CreatePostInput {
+  title: String!
+  body: String
+  submit: Boolean
+}
+
+input UpdatePostInput {
+  title: String
+  body: String
 }
 `;

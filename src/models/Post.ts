@@ -10,12 +10,13 @@ export interface Post {
   _id: Types.ObjectId;
   user_id: Types.ObjectId;
   title: string;
-  body: string;
+  body?: string;
   submitted_at?: Date;
   published_at?: Date;
   meta: Meta;
   created_at: Date;
   updated_at: Date;
+  user: Types.Subdocument;
   comments: Types.ArraySubdocument;
 }
 
@@ -30,7 +31,7 @@ const schema = new Schema<Post, PostModel, PostMethods>(
   {
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true },
-    body: { type: String, required: true },
+    body: String,
     submitted_at: Date,
     published_at: Date,
     meta: {

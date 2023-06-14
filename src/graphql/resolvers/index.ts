@@ -16,7 +16,7 @@ const resolvers = {
   Mutation: {
     ...authResolvers.Mutation,
     ...passwordResetResolvers.Mutation,
-    //   ...postResolvers.Mutation,
+    ...postResolvers.Mutation,
     //   ...commentResolvers.Mutation,
     //   ...userResolvers.Mutation,
   },
