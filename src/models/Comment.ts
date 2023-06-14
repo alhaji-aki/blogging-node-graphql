@@ -2,12 +2,14 @@ import { Schema, Model, model, Types } from 'mongoose';
 import './Post';
 import './User';
 
-interface Comment {
+export interface Comment {
   user_id: Types.ObjectId;
   post_id: Types.ObjectId;
   body: string;
   created_at: Date;
   updated_at: Date;
+  user: Types.Subdocument;
+  post: Types.Subdocument;
 }
 
 const schema = new Schema<Comment, Model<Comment>>(

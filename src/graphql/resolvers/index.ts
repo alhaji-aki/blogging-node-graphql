@@ -17,7 +17,7 @@ const resolvers = {
     ...authResolvers.Mutation,
     ...passwordResetResolvers.Mutation,
     ...postResolvers.Mutation,
-    //   ...commentResolvers.Mutation,
+    ...commentResolvers.Mutation,
     //   ...userResolvers.Mutation,
   },
 };

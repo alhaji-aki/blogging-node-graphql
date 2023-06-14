@@ -84,16 +84,13 @@ type Comment {
   body: String!
   created_at: DateTime!
   updated_at: DateTime!
+  post: PublishedPost!
   user: Author!
 }
 
 type Meta {
   views: Int!
 }
-
-# input CommentInput {
-#   body: String
-# }
 
 
 # input UpdateUserInput {
@@ -120,9 +117,8 @@ type Mutation {
   deletePost(id: ID!): Post! @auth
   submitPost(id: ID!): Post! @auth
   publishPost(id: ID!): Post! @auth(isAdmin: true)
-  # createComment(postId: ID!, content: CommentInput): Comment @auth
-  # updateComment(id: ID!, content: CommentInput): Comment @auth
-  # deleteComment(id: ID!): Comment @auth
+  createComment(postId: ID!, input: CreateCommentInput!): Comment! @auth(allowSuspendedUser: false)
+  deleteComment(id: ID!): Comment! @auth
   # updateUser(content: UpdateUserInput): User @auth
   # updateUserPassword(id: ID!, password: String!): User @auth
   # toggleAdmin(id: ID!, is_admin: Boolean!): User @auth(isAdmin: true)
@@ -152,5 +148,9 @@ input CreatePostInput {
 input UpdatePostInput {
   title: String
   body: String
+}
+
+input CreateCommentInput {
+  body: String!
 }
 `;

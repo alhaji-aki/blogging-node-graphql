@@ -19,12 +19,11 @@ Blogging application using node and graphql
    - [x] Admin can publish posts
    - [x] Posts have a status: draft, submitted and published
    - [x] Posts submitted by admins are published automatically
-   - [ ] Keep views count on posts
+   - [ ] Keep views count on posts (Log view counts on posts)
 3. CRUD for Comments
-   - [ ] Create Comment On Post (authenticated users only)
+   - [x] Create Comment On Post (authenticated users only)
    - [ ] Read Post Comments (public routes)
-   - [ ] Update Comment (authenticated users and only user who created the comment)
-   - [ ] Delete Comment (authenticed user who created the comment and admin)
+   - [x] Delete Comment (authenticed user who created the comment and admin)
 4. Users
    - [ ] Admins can view all users
    - [ ] Admins can make other users admin
