@@ -37,9 +37,6 @@ export default {
     },
   },
   Mutation: {
-    async createUser() {
-      //TODO:
-    },
     async updateUser() {
       //TODO:
     },
