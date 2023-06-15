@@ -102,6 +102,8 @@ type Query {
   getAuthenticatedUser: User! @auth(allowSuspendedUser: true)
   # TODO: getAuthenticatedUsersPosts: [Post!]!
   getPosts: [PublishedPost!]!
+  # TODO: add query to get user single post
+  # TODO: restrict the data returned from the getPost query since its a public query
   getPost(id: ID!): SinglePost!
   getUsers: [User!]! @auth(isAdmin: true)
   getUser(id: ID!): SingleUser!
@@ -119,10 +121,10 @@ type Mutation {
   publishPost(id: ID!): Post! @auth(isAdmin: true)
   createComment(postId: ID!, input: CreateCommentInput!): Comment! @auth(allowSuspendedUser: false)
   deleteComment(id: ID!): Comment! @auth
-  # updateUser(content: UpdateUserInput): User @auth
-  # updateUserPassword(id: ID!, password: String!): User @auth
-  # toggleAdmin(id: ID!, is_admin: Boolean!): User @auth(isAdmin: true)
-  # toggleUserSuspension(id: ID!): User @auth(isAdmin: true)
+  updateProfile(input: UpdateUserInput!): User! @auth
+  updatePassword(input: UpdatePasswordInput!): User! @auth
+  toggleAdmin(id: ID!): User! @auth(isAdmin: true)
+  toggleUserSuspension(id: ID!): User! @auth(isAdmin: true)
 }
 
 input RegisterUserInput {
@@ -152,5 +154,15 @@ input UpdatePostInput {
 
 input CreateCommentInput {
   body: String!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+}
+
+input UpdatePasswordInput {
+  password: String!
+  confirm_password: String!
 }
 `;

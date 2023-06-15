@@ -25,9 +25,9 @@ Blogging application using node and graphql
    - [ ] Read Post Comments (public routes)
    - [x] Delete Comment (authenticed user who created the comment and admin)
 4. Users
-   - [ ] Admins can view all users
-   - [ ] Admins can make other users admin
-   - [ ] Admin can suspend other users
+   - [x] Admins can view all users
+   - [x] Admins can make other users admin
+   - [x] Admin can suspend other users
 5. Search
    - [ ] An endpoint that returns both users (who have ever published posts) and posts (published ones)
 6. Notifications

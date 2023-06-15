@@ -12,7 +12,7 @@ function throwException(message: string, code: string, status: number) {
 
 export default (directiveName: string) => {
   return {
-    authDirectiveTypeDefs: `directive @${directiveName}(isAdmin: Boolean = false, allowSuspendedUser: Boolean = false) on OBJECT | FIELD_DEFINITION`,
+    authDirectiveTypeDefs: `directive @${directiveName}(isAdmin: Boolean = false, allowSuspendedUser: Boolean = false, belongsToUser: Boolean = false) on OBJECT | FIELD_DEFINITION`,
     authDirectiveTransformer: (schema: GraphQLSchema) =>
       mapSchema(schema, {
         [MapperKind.OBJECT_FIELD](fieldConfig) {
@@ -24,6 +24,7 @@ export default (directiveName: string) => {
           if (authDirective) {
             const { isAdmin, allowSuspendedUser } = authDirective;
 
+            // TODO: use the belongsToUser condition to check if item belongs to user
             const originalResolver =
               fieldConfig.resolve || defaultFieldResolver;
 
