@@ -20,6 +20,7 @@ type AuthUser {
   updated_at: DateTime!
   suspended_at: DateTime
   meta: TokenInfo
+  posts: [Post!]!
 }
 
 type TokenInfo {
@@ -99,7 +100,7 @@ type Meta {
 # }
 
 type Query {
-  getAuthenticatedUser: User! @auth(allowSuspendedUser: true)
+  getAuthenticatedUser: AuthUser! @auth(allowSuspendedUser: true)
   # TODO: getAuthenticatedUsersPosts: [Post!]!
   getPosts: [PublishedPost!]!
   # TODO: add query to get user single post
