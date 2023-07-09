@@ -66,23 +66,6 @@ async function validateTokenModel(tokenModel, token: string) {
   }
 }
 
-async function dispatchPasswordResetNotification(email: string, token: string) {
-  const url = `${process.env.AUTH_FRONTEND_PASSWORD_RESET_URL}?token=${token}&email=${email}`;
-
-  const appName = process.env.APP_NAME;
-
-  await EmailQueue.add({
-    email,
-    subject: 'Reset Password Notification',
-    template: '../templates/password-reset.hbs',
-    context: {
-      url,
-      appName,
-      expires: process.env.AUTH_PASSWORD_RESET_EXPIRES_IN,
-    },
-  });
-}
-
 export default {
   Mutation: {
     async forgotPassword(_, { email }) {
@@ -100,7 +83,7 @@ export default {
 
       await tokenModel.save();
 
-      await dispatchPasswordResetNotification(email, token);
+      await EmailQueue.add('password-reset-job', { email, token });
 
       return 'Password reset link sent to your email.';
     },

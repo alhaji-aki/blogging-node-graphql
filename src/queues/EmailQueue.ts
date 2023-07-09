@@ -1,31 +1,35 @@
 import Queue from 'bull';
 import sendEmail from '../config/mailer';
+import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 
-export default class EmailQueue {
-  queue: any;
+dotenvExpand.expand(dotenv.config());
 
-  constructor() {
-    this.queue = new Queue('emails');
+const queue = new Queue('emails', {
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: +process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+  },
+});
 
-    this.queue.process('email', (job) => {
-      this.sendEmail(job);
-    });
-  }
+queue.process('password-reset-job', async (job) => {
+  const { email, token } = job.data;
 
-  add(data) {
-    this.queue.add('email', data);
-  }
+  const url = `${process.env.AUTH_FRONTEND_PASSWORD_RESET_URL}?token=${token}&email=${email}`;
 
-  async sendEmail(job) {
-    const { to, subject, template, context } = job.data;
+  const appName = process.env.APP_NAME;
 
-    try {
-      await sendEmail(to, subject, template, context);
-      job.moveToCompleted('done', true);
-    } catch (error) {
-      if (error.response) {
-        job.moveToFailed({ message: 'job failed' });
-      }
-    }
-  }
-}
+  await sendEmail(
+    email,
+    'Reset Password Notification',
+    '../templates/password-reset.hbs',
+    {
+      url,
+      appName,
+      expires: process.env.AUTH_PASSWORD_RESET_EXPIRES_IN,
+    },
+  );
+});
+
+export default queue;
