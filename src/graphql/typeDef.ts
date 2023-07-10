@@ -1,6 +1,12 @@
 export default `#graphql
 scalar DateTime
 
+enum Status {
+  DRAFT
+  SUBMITTED
+  PUBLISHED
+}
+
 type User {
   id: ID!
   name: String!
@@ -20,7 +26,7 @@ type AuthUser {
   updated_at: DateTime!
   suspended_at: DateTime
   meta: TokenInfo
-  posts: [Post!]!
+  posts(filter: PostFilterInput): [Post!]!
 }
 
 type TokenInfo {
@@ -48,7 +54,7 @@ type Post {
   id: ID!
   title: String!
   body: String
-  status: String!
+  status: Status!
   submitted_at: DateTime
   published_at: DateTime
   meta: Meta!
@@ -70,7 +76,7 @@ type SinglePost {
   id: ID!
   title: String!
   body: String
-  status: String!
+  status: Status!
   submitted_at: DateTime
   published_at: DateTime
   meta: Meta!
@@ -93,15 +99,8 @@ type Meta {
   views: Int!
 }
 
-
-# input UpdateUserInput {
-#   name: String
-#   email: String
-# }
-
 type Query {
   getAuthenticatedUser: AuthUser! @auth(allowSuspendedUser: true)
-  # TODO: getAuthenticatedUsersPosts: [Post!]!
   getPosts: [PublishedPost!]!
   # TODO: add query to get user single post
   # TODO: restrict the data returned from the getPost query since its a public query
@@ -140,6 +139,11 @@ input ResetPasswordInput {
   email: String!
   password: String!
   confirm_password: String!
+}
+
+input PostFilterInput {
+  query: String
+  status: Status
 }
 
 input CreatePostInput {

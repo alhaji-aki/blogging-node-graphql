@@ -5,11 +5,6 @@ import User from '../../models/User';
 
 export default {
   Query: {
-    // async getAuthenticatedUsersPosts() {
-    // TODO: add filters {search, status} and sorters {order by views or latest}
-    // TODO: get all posts for the authenticated user
-    // TODO: this endpoint cannot contain comments of the posts
-    // },
     async getPosts(): Promise<Array<PostInterface>> {
       // TODO: add filters {search} and sorters {order by views or latest}
       const suspendedUsers = (
@@ -154,6 +149,35 @@ export default {
       // TODO: dispatch job to send notification to user published post
 
       return post;
+    },
+  },
+  AuthUser: {
+    async posts(user, { filter }): Promise<Array<PostInterface>> {
+      // TODO: add sorters {order by views or latest}
+      let query = { user_id: user.id };
+
+      if (filter && filter.query) {
+        query.title = { $regex: filter.query, $options: 'i' };
+      }
+
+      if (filter && filter.status) {
+        switch (filter.status) {
+          case 'draft':
+            query.submitted_at = { $eq: null };
+            query.published_at = { $eq: null };
+            break;
+          case 'submitted':
+            query.submitted_at = { $eq: null };
+            query.published_at = { $not: { $eq: null } };
+            break;
+          case 'published':
+            query.published_at = { $not: { $eq: null } };
+            query.submitted_at = { $not: { $eq: null } };
+            break;
+        }
+      }
+
+      return await Post.find(query);
     },
   },
 };

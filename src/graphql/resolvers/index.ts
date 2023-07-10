@@ -7,6 +7,11 @@ import { DateTimeISOResolver } from 'graphql-scalars';
 
 const resolvers = {
   DateTime: DateTimeISOResolver,
+  Status: {
+    DRAFT: 'draft',
+    SUBMITTED: 'submitted',
+    PUBLISHED: 'published',
+  },
   Query: {
     ...authResolvers.Query,
     ...postResolvers.Query,
@@ -19,6 +24,9 @@ const resolvers = {
     ...postResolvers.Mutation,
     ...commentResolvers.Mutation,
     ...userResolvers.Mutation,
+  },
+  AuthUser: {
+    ...postResolvers.AuthUser,
   },
 };
 
