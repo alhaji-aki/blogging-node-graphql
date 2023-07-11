@@ -12,6 +12,19 @@ const resolvers = {
     SUBMITTED: 'submitted',
     PUBLISHED: 'published',
   },
+  GeneralSortBy: {
+    PUBLISHED_AT: 'published_at',
+    POPULAR: 'popular',
+  },
+  UserSortBy: {
+    PUBLISHED_AT: 'published_at',
+    CREATED_AT: 'created_at',
+    POPULAR: 'popular',
+  },
+  SortDirection: {
+    ASCENDING: 'asc',
+    DESCENDING: 'desc',
+  },
   Query: {
     ...authResolvers.Query,
     ...postResolvers.Query,

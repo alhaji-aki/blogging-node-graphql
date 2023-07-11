@@ -4,8 +4,6 @@ import PostPolicy from '../../policies/post.policy';
 import User from '../../models/User';
 
 function getQueryFilter(filter) {
-  // TODO: add sorters {order by views or latest}
-
   const query: { title?: any; submitted_at?: any; published_at?: any } = {};
 
   if (filter && filter.query) {
@@ -32,12 +30,29 @@ function getQueryFilter(filter) {
   return query;
 }
 
+function getQuerySorters(filter) {
+  const sort = {};
+
+  if (filter && filter.sort_by) {
+    switch (filter.sort_by) {
+      case 'popular':
+        sort['meta.views'] = filter.sort_direction || 'desc';
+        break;
+      case 'published_at':
+        sort['published_at'] = filter.sort_direction || 'desc';
+        break;
+      case 'created_at':
+        sort['created_at'] = filter.sort_direction || 'desc';
+        break;
+    }
+  }
+
+  return sort;
+}
+
 export default {
   Query: {
     async getPosts(_, { filter }): Promise<Array<PostInterface>> {
-      const query = getQueryFilter(filter);
-
-      // TODO: add sorters {order by views or latest}
       const suspendedUsers = (
         await User.find({}).where('suspended_at').ne(null).select('_id').exec()
       ).map((doc) => doc._id);
@@ -45,8 +60,9 @@ export default {
       return await Post.find({
         user_id: { $not: { $in: suspendedUsers } },
         published_at: { $not: { $eq: null } },
-        ...query,
+        ...getQueryFilter(filter),
       })
+        .sort(getQuerySorters(filter))
         .populate('user')
         .exec();
     },
@@ -199,8 +215,6 @@ export default {
   },
   AuthUser: {
     async posts(user, { filter }): Promise<Array<PostInterface>> {
-      // TODO: add sorters {order by views or latest}
-
       const query: {
         title?: any;
         submitted_at?: any;
@@ -210,7 +224,7 @@ export default {
 
       query.user_id = user.id;
 
-      return await Post.find(query).exec();
+      return await Post.find(query).sort(getQuerySorters(filter)).exec();
     },
   },
 };

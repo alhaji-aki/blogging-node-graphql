@@ -7,6 +7,22 @@ enum Status {
   PUBLISHED
 }
 
+enum GeneralSortBy {
+  PUBLISHED_AT
+  POPULAR
+}
+
+enum UserSortBy {
+  PUBLISHED_AT
+  CREATED_AT
+  POPULAR
+}
+
+enum SortDirection {
+  ASCENDING
+  DESCENDING
+}
+
 type User {
   id: ID!
   name: String!
@@ -159,10 +175,14 @@ input ResetPasswordInput {
 input UserPostFilterInput {
   query: String
   status: Status
+  sort_by: UserSortBy
+  sort_direction: SortDirection
 }
 
 input GeneralPostFilterInput {
   query: String
+  sort_by: GeneralSortBy
+  sort_direction: SortDirection
 }
 
 input CreatePostInput {
