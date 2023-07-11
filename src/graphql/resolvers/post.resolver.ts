@@ -78,7 +78,8 @@ export default {
 
       PostPolicy.viewPublished(authenticatedUser, post);
 
-      // TODO: log post views
+      // increment view count
+      await post.updateOne({ $inc: { 'meta.views': 1 } }).exec();
 
       return post;
     },
