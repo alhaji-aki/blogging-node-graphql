@@ -22,7 +22,7 @@ Blogging application using node and graphql
    - [ ] Keep views count on posts (Log view counts on posts)
 3. CRUD for Comments
    - [x] Create Comment On Post (authenticated users only)
-   - [ ] Read Post Comments (public routes)
+   - [x] Read Post Comments (public routes)
    - [x] Delete Comment (authenticed user who created the comment and admin)
 4. Users
    - [x] Admins can view all users

@@ -50,6 +50,22 @@ export default {
         .populate('user')
         .exec();
     },
+    async getPublishedPost(
+      _,
+      { id },
+      { authenticatedUser },
+    ): Promise<PostInterface> {
+      const post = await Post.findById(id)
+        .populate('user')
+        .populate({ path: 'comments', populate: { path: 'user' } })
+        .exec();
+
+      PostPolicy.viewPublished(authenticatedUser, post);
+
+      // TODO: log post views
+
+      return post;
+    },
     async getPost(_, { id }, { authenticatedUser }): Promise<PostInterface> {
       const post = await Post.findById(id)
         .populate('user')
@@ -57,8 +73,6 @@ export default {
         .exec();
 
       PostPolicy.view(authenticatedUser, post);
-
-      // TODO: log post views
 
       return post;
     },

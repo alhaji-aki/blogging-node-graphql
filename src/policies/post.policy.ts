@@ -15,11 +15,23 @@ export default {
       throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
     }
 
-    if (!user && !post.published()) {
+    if (post.user.id !== user.id && !user.is_admin) {
       throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
     }
 
-    if ((post.user.id !== user.id || !user.is_admin) && !post.published()) {
+    return true;
+  },
+
+  viewPublished(user, post): boolean {
+    if (post.user.suspended()) {
+      throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
+    }
+
+    if (user && user.suspended()) {
+      throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
+    }
+
+    if (!post.published()) {
       throwException('Post not found.', 'ITEM_NOT_FOUND', 404);
     }
 

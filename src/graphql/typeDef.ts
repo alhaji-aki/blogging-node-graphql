@@ -72,6 +72,16 @@ type PublishedPost {
   user: Author!
 }
 
+type SinglePublishedPost {
+  id: ID!
+  title: String!
+  body: String!
+  published_at: DateTime!
+  meta: Meta!
+  user: Author!
+  comments: [PostComment!]!
+}
+
 type SinglePost {
   id: ID!
   title: String!
@@ -83,15 +93,21 @@ type SinglePost {
   created_at: DateTime!
   updated_at: DateTime!
   user: Author!
-  comments: [Comment!]!
+  comments: [PostComment!]!
 }
 
 type Comment {
   id: ID!
   body: String!
   created_at: DateTime!
-  updated_at: DateTime!
   post: PublishedPost!
+  user: Author!
+}
+
+type PostComment {
+  id: ID!
+  body: String!
+  created_at: DateTime!
   user: Author!
 }
 
@@ -102,9 +118,8 @@ type Meta {
 type Query {
   getAuthenticatedUser: AuthUser! @auth(allowSuspendedUser: true)
   getPosts(filter: GeneralPostFilterInput): [PublishedPost!]!
-  # TODO: add query to get user single post
-  # TODO: restrict the data returned from the getPost query since its a public query
-  getPost(id: ID!): SinglePost!
+  getPost(id: ID!): SinglePost! @auth
+  getPublishedPost(id: ID!): SinglePublishedPost!
   getUsers(filter: UserFilterInput): [User!]! @auth(isAdmin: true)
   getUser(id: ID!): SingleUser!
 }
