@@ -26,7 +26,7 @@ type AuthUser {
   updated_at: DateTime!
   suspended_at: DateTime
   meta: TokenInfo
-  posts(filter: PostFilterInput): [Post!]!
+  posts(filter: UserPostFilterInput): [Post!]!
 }
 
 type TokenInfo {
@@ -101,7 +101,7 @@ type Meta {
 
 type Query {
   getAuthenticatedUser: AuthUser! @auth(allowSuspendedUser: true)
-  getPosts: [PublishedPost!]!
+  getPosts(filter: GeneralPostFilterInput): [PublishedPost!]!
   # TODO: add query to get user single post
   # TODO: restrict the data returned from the getPost query since its a public query
   getPost(id: ID!): SinglePost!
@@ -141,9 +141,13 @@ input ResetPasswordInput {
   confirm_password: String!
 }
 
-input PostFilterInput {
+input UserPostFilterInput {
   query: String
   status: Status
+}
+
+input GeneralPostFilterInput {
+  query: String
 }
 
 input CreatePostInput {

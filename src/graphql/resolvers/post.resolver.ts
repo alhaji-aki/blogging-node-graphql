@@ -3,10 +3,41 @@ import Post, { Post as PostInterface } from '../../models/Post';
 import PostPolicy from '../../policies/post.policy';
 import User from '../../models/User';
 
+function getQueryFilter(filter) {
+  // TODO: add sorters {order by views or latest}
+
+  const query: { title?: any; submitted_at?: any; published_at?: any } = {};
+
+  if (filter && filter.query) {
+    query.title = { $regex: filter.query, $options: 'i' };
+  }
+
+  if (filter && filter.status) {
+    switch (filter.status) {
+      case 'draft':
+        query.submitted_at = { $eq: null };
+        query.published_at = { $eq: null };
+        break;
+      case 'submitted':
+        query.submitted_at = { $eq: null };
+        query.published_at = { $not: { $eq: null } };
+        break;
+      case 'published':
+        query.published_at = { $not: { $eq: null } };
+        query.submitted_at = { $not: { $eq: null } };
+        break;
+    }
+  }
+
+  return query;
+}
+
 export default {
   Query: {
-    async getPosts(): Promise<Array<PostInterface>> {
-      // TODO: add filters {search} and sorters {order by views or latest}
+    async getPosts(_, { filter }): Promise<Array<PostInterface>> {
+      const query = getQueryFilter(filter);
+
+      // TODO: add sorters {order by views or latest}
       const suspendedUsers = (
         await User.find({}).where('suspended_at').ne(null).select('_id').exec()
       ).map((doc) => doc._id);
@@ -14,6 +45,7 @@ export default {
       return await Post.find({
         user_id: { $not: { $in: suspendedUsers } },
         published_at: { $not: { $eq: null } },
+        ...query,
       })
         .populate('user')
         .exec();
@@ -154,28 +186,15 @@ export default {
   AuthUser: {
     async posts(user, { filter }): Promise<Array<PostInterface>> {
       // TODO: add sorters {order by views or latest}
-      let query = { user_id: user.id };
 
-      if (filter && filter.query) {
-        query.title = { $regex: filter.query, $options: 'i' };
-      }
+      const query: {
+        title?: any;
+        submitted_at?: any;
+        published_at?: any;
+        user_id?: any;
+      } = getQueryFilter(filter);
 
-      if (filter && filter.status) {
-        switch (filter.status) {
-          case 'draft':
-            query.submitted_at = { $eq: null };
-            query.published_at = { $eq: null };
-            break;
-          case 'submitted':
-            query.submitted_at = { $eq: null };
-            query.published_at = { $not: { $eq: null } };
-            break;
-          case 'published':
-            query.published_at = { $not: { $eq: null } };
-            query.submitted_at = { $not: { $eq: null } };
-            break;
-        }
-      }
+      query.user_id = user.id;
 
       return await Post.find(query);
     },
