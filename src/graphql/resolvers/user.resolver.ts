@@ -2,11 +2,32 @@ import { GraphQLError } from 'graphql';
 import User, { User as UserInterface } from '../../models/User';
 import UserPolicy from '../../policies/user.policy';
 
+function getQueryFilter(filter) {
+  const query: { name?: any; suspended_at?: any; is_admin?: any } = {};
+
+  if (filter && filter.query) {
+    query.name = { $regex: filter.query, $options: 'i' };
+  }
+
+  if (filter && typeof filter.suspended == 'boolean') {
+    query.suspended_at = filter.suspended
+      ? { $not: { $eq: null } }
+      : { $eq: null };
+  }
+
+  if (filter && typeof filter.is_admin == 'boolean') {
+    query.is_admin = filter.is_admin;
+  }
+
+  return query;
+}
+
 export default {
   Query: {
-    async getUsers(): Promise<Array<UserInterface>> {
-      // TODO: admins can filter {get only admins, search, suspended}
-      return await User.find();
+    async getUsers(_, { filter }): Promise<Array<UserInterface>> {
+      const query = getQueryFilter(filter);
+
+      return await User.find(query).exec();
     },
     async getUser(_, { id }, { authenticatedUser }): Promise<UserInterface> {
       const user = await User.findById(id)

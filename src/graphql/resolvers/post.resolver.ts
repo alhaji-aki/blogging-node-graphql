@@ -196,7 +196,7 @@ export default {
 
       query.user_id = user.id;
 
-      return await Post.find(query);
+      return await Post.find(query).exec();
     },
   },
 };

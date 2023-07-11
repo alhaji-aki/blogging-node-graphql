@@ -105,7 +105,7 @@ type Query {
   # TODO: add query to get user single post
   # TODO: restrict the data returned from the getPost query since its a public query
   getPost(id: ID!): SinglePost!
-  getUsers: [User!]! @auth(isAdmin: true)
+  getUsers(filter: UserFilterInput): [User!]! @auth(isAdmin: true)
   getUser(id: ID!): SingleUser!
 }
 
@@ -163,6 +163,12 @@ input UpdatePostInput {
 
 input CreateCommentInput {
   body: String!
+}
+
+input UserFilterInput {
+  is_admin: Boolean
+  query: String
+  suspended: Boolean
 }
 
 input UpdateUserInput {
