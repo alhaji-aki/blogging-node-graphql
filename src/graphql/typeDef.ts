@@ -162,14 +162,14 @@ input RegisterUserInput {
   name: String!
   email: String!
   password: String!
-  confirm_password: String!
+  password_confirmation: String!
 }
 
 input ResetPasswordInput {
   token: String!
   email: String!
   password: String!
-  confirm_password: String!
+  password_confirmation: String!
 }
 
 input UserPostFilterInput {
@@ -213,6 +213,6 @@ input UpdateUserInput {
 
 input UpdatePasswordInput {
   password: String!
-  confirm_password: String!
+  password_confirmation: String!
 }
 `;

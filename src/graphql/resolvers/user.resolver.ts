@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql';
+import Validator from 'validatorjs';
 import User, { User as UserInterface } from '../../models/User';
 import UserPolicy from '../../policies/user.policy';
 
@@ -46,12 +47,28 @@ export default {
   Mutation: {
     async updateProfile(
       _,
-      { input: { name, email } },
+      { input },
       { authenticatedUser },
     ): Promise<UserInterface> {
-      // TODO: validate
+      const validation = new Validator(input, {
+        name: ['nullable', 'string', 'max:255'],
+        email: ['nullable', 'string', 'email', 'max:255'],
+      });
 
-      if (!name && !email) {
+      if (validation.fails()) {
+        throw new GraphQLError(
+          'Invalid data submitted. See extentions.errors for more details',
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              http: { status: 422 },
+              errors: validation.errors.all(),
+            },
+          },
+        );
+      }
+
+      if (!input.name && !input.email) {
         throw new GraphQLError('No data to update.', {
           extensions: {
             code: 'BAD_USER_INPUT',
@@ -61,8 +78,8 @@ export default {
       }
 
       if (
-        email &&
-        !!(await User.findOne({ email })
+        input.email &&
+        !!(await User.findOne({ email: input.email })
           .where('_id')
           .ne(authenticatedUser.id)
           .exec())
@@ -70,14 +87,16 @@ export default {
         throw new GraphQLError('Email is already taken', {
           extensions: {
             code: 'BAD_USER_INPUT',
-            argumentName: 'email',
             http: { status: 422 },
+            errors: {
+              email: ['Email is already taken'],
+            },
           },
         });
       }
 
-      authenticatedUser.name = name || authenticatedUser.name;
-      authenticatedUser.email = email || authenticatedUser.email;
+      authenticatedUser.name = input.name || authenticatedUser.name;
+      authenticatedUser.email = input.email || authenticatedUser.email;
 
       await authenticatedUser.save();
 
@@ -85,12 +104,27 @@ export default {
     },
     async updatePassword(
       _,
-      { input: { password } },
+      { input },
       { authenticatedUser },
     ): Promise<UserInterface> {
-      // TODO: validate
+      const validation = new Validator(input, {
+        password: ['required', 'string', 'confirmed', 'max:255'],
+      });
 
-      authenticatedUser.password = password;
+      if (validation.fails()) {
+        throw new GraphQLError(
+          'Invalid data submitted. See extentions.errors for more details',
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              http: { status: 422 },
+              errors: validation.errors.all(),
+            },
+          },
+        );
+      }
+
+      authenticatedUser.password = input.password;
 
       await authenticatedUser.save();
 

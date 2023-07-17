@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql';
+import Validator from 'validatorjs';
 import Post, { Post as PostInterface } from '../../models/Post';
 import PostPolicy from '../../policies/post.policy';
 import User from '../../models/User';
@@ -97,17 +98,55 @@ export default {
   Mutation: {
     async createPost(
       _,
-      { input: { title, body, submit } },
+      { input },
       { authenticatedUser },
     ): Promise<PostInterface> {
-      if (submit && !body) {
+      const validation = new Validator(input, {
+        title: ['nullable', 'string', 'max:255'],
+        body: ['nullable', 'string'],
+        submit: ['nullable', 'boolean'],
+      });
+
+      if (validation.fails()) {
+        throw new GraphQLError(
+          'Invalid data submitted. See extentions.errors for more details',
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              http: { status: 422 },
+              errors: validation.errors.all(),
+            },
+          },
+        );
+      }
+
+      if (!input.title && !input.body) {
+        throw new GraphQLError(
+          'You cannot submit an incomplete post. Post must have either a title or a body',
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              http: { status: 422 },
+              errors: {
+                title: [
+                  'You cannot submit an incomplete post. Post must have either a title or a body',
+                ],
+              },
+            },
+          },
+        );
+      }
+
+      if (input.submit && !input.body) {
         throw new GraphQLError(
           'You cannot submit an incomplete post. Post does not have a body',
           {
             extensions: {
               code: 'BAD_USER_INPUT',
-              argumentName: 'body',
               http: { status: 422 },
+              errors: {
+                body: ['The post dooes not have a body.'],
+              },
             },
           },
         );
@@ -116,7 +155,7 @@ export default {
       let submitted_at,
         published_at = null;
 
-      if (title && body && submit) {
+      if (input.title && input.body && input.submit) {
         submitted_at = new Date();
       }
 
@@ -125,8 +164,8 @@ export default {
       }
 
       const post = await Post.create({
-        title,
-        body,
+        title: input.title,
+        body: input.body,
         user_id: authenticatedUser._id,
         submitted_at,
         published_at,

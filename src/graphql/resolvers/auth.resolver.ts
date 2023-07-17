@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
+import Validator from 'validatorjs';
 import User from '../../models/User';
 import appConfig from '../../config/app';
 
@@ -26,22 +27,41 @@ export default {
     },
   },
   Mutation: {
-    async register(_, { input: { name, email, password } }) {
-      // TODO: validate
+    async register(_, { input }) {
+      const validation = new Validator(input, {
+        name: ['required', 'string', 'max:255'],
+        email: ['required', 'string', 'email', 'max:255'],
+        password: ['required', 'string', 'confirmed', 'max:255'],
+      });
 
-      const user = await getUser(email);
+      if (validation.fails()) {
+        throw new GraphQLError(
+          'Invalid data submitted. See extentions.errors for more details',
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              http: { status: 422 },
+              errors: validation.errors.all(),
+            },
+          },
+        );
+      }
+
+      const user = await getUser(input.email);
 
       if (user) {
         throw new GraphQLError('Email is already taken', {
           extensions: {
             code: 'BAD_USER_INPUT',
-            argumentName: 'email',
             http: { status: 422 },
+            errors: {
+              email: ['Email is already taken'],
+            },
           },
         });
       }
 
-      const newUser = new User({ name, email, password });
+      const newUser = new User(input);
 
       const res = await newUser.save();
 
@@ -55,22 +75,40 @@ export default {
         },
       };
     },
-    async login(_, { email, password }) {
-      // TODO: validate credentials
+    async login(_, args) {
+      const validation = new Validator(args, {
+        email: ['required', 'string', 'email'],
+        password: ['required', 'string'],
+      });
+
+      if (validation.fails()) {
+        throw new GraphQLError(
+          'Invalid data submitted. See extentions.errors for more details',
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              http: { status: 422 },
+              errors: validation.errors.all(),
+            },
+          },
+        );
+      }
 
       // get user
-      const user = await getUser(email);
+      const user = await getUser(args.email);
 
       if (
         !user ||
-        !(await user.validatePassword(password)) ||
+        !(await user.validatePassword(args.password)) ||
         user.suspended()
       ) {
         throw new GraphQLError('Invalid email or password submitted', {
           extensions: {
             code: 'BAD_USER_INPUT',
-            argumentName: 'email',
             http: { status: 422 },
+            errors: {
+              email: ['Invalid email or password submitted'],
+            },
           },
         });
       }
