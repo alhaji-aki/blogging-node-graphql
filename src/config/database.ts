@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
+
+dotenvExpand.expand(dotenv.config());
+
 import mongoose from 'mongoose';
 
 export const getConnectionString = (): string => {

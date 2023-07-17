@@ -1,6 +1,9 @@
 import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
 import User from '../../models/User';
+import appConfig from '../../config/app';
+
+const config = appConfig();
 
 async function getUser(email: string) {
   return User.findOne({ email });
@@ -11,8 +14,8 @@ function generateAuthToken(user) {
     {
       id: user.id,
     },
-    process.env.APP_KEY,
-    { expiresIn: process.env.AUTH_ACCESS_TOKEN_EXPIRES_IN || '1h' },
+    config.key,
+    { expiresIn: config.auth.expiresIn },
   );
 }
 

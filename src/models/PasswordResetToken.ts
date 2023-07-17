@@ -8,6 +8,9 @@ import {
 import bcrypt from 'bcrypt';
 import './Post';
 import { add, isAfter, isBefore } from 'date-fns';
+import appConfig from '../config/app';
+
+const config = appConfig();
 
 interface PasswordResetToken {
   email: string;
@@ -71,7 +74,7 @@ schema.query.byEmail = function (email: string) {
 };
 
 schema.methods.recentlyCreated = function () {
-  const throttle: number = +process.env.AUTH_PASSWORD_RESET_THROTTLE || 60;
+  const throttle: number = config.password.throttle;
 
   if (throttle <= 0) {
     return false;
@@ -88,7 +91,7 @@ schema.methods.recentlyCreated = function () {
 schema.methods.hasExpired = function () {
   return isBefore(
     add(this.created_at, {
-      minutes: +process.env.AUTH_PASSWORD_RESET_EXPIRES_IN || 1,
+      minutes: config.password.expiresIn,
     }),
     new Date(),
   );

@@ -1,10 +1,6 @@
-import dotenv from 'dotenv';
-import dotenvExpand from 'dotenv-expand';
 import logger from './config/logger';
 import database from './config/database';
 import startServer from './config/server';
-
-dotenvExpand.expand(dotenv.config());
 
 async function bootstrap() {
   try {

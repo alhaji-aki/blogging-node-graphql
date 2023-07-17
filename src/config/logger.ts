@@ -1,6 +1,9 @@
 import winston, { format, transports } from 'winston';
 import colorize from 'json-colorizer';
 import path from 'path';
+import appConfig from './app';
+
+const config = appConfig();
 
 const logFormat = format.printf(
   (info) =>
@@ -12,7 +15,7 @@ const logFormat = format.printf(
 );
 
 const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  level: config.environment === 'production' ? 'info' : 'debug',
   format: format.combine(
     format.label({ label: path.basename(process.mainModule.filename) }),
     format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

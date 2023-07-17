@@ -6,9 +6,12 @@ import typeDefs from '../graphql/typeDef';
 import resolvers from '../graphql/resolvers';
 import { directiveTransformers, directives } from '../graphql/directives';
 import User from '../models/User';
+import appConfig from './app';
+
+const config = appConfig();
 
 export default async () => {
-  const port = +process.env.PORT || 5000;
+  const port = config.port;
 
   let schema = makeExecutableSchema({
     typeDefs: [directives, typeDefs],
@@ -23,7 +26,7 @@ export default async () => {
   // create an apollo server
   const server = new ApolloServer({
     schema,
-    introspection: process.env.NODE_ENV === 'development',
+    introspection: config.environment === 'development',
   });
 
   // start the apollo server
@@ -37,7 +40,7 @@ export default async () => {
       }
 
       try {
-        const payload = jwt.verify(token, process.env.APP_KEY);
+        const payload = jwt.verify(token, config.key);
 
         return { authenticatedUser: await User.findById(payload.id) };
       } catch (error) {

@@ -3,6 +3,9 @@ import crypto from 'crypto';
 import User from '../../models/User';
 import PasswordResetToken from '../../models/PasswordResetToken';
 import EmailQueue from '../../queues/EmailQueue';
+import appConfig from '../../config/app';
+
+const config = appConfig();
 
 async function getUser(email: string) {
   return User.findOne({ email });
@@ -46,7 +49,7 @@ async function deleteExistingTokensForEmail(email: string) {
 }
 
 function generateResetToken(): string {
-  const hmac = crypto.createHmac('sha256', process.env.APP_KEY);
+  const hmac = crypto.createHmac('sha256', config.key);
   return hmac.update(crypto.randomBytes(40).toString('hex')).digest('hex');
 }
 

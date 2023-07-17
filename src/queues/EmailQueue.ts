@@ -1,24 +1,18 @@
 import Queue from 'bull';
 import sendEmail from '../config/mailer';
-import dotenv from 'dotenv';
-import dotenvExpand from 'dotenv-expand';
+import appConfig from '../config/app';
+import getRedisConfig from '../config/redis';
 
-dotenvExpand.expand(dotenv.config());
+const config = appConfig();
 
-const queue = new Queue('emails', {
-  redis: {
-    host: process.env.REDIS_HOST,
-    port: +process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD,
-  },
-});
+const queue = new Queue('emails', { redis: getRedisConfig() });
 
 queue.process('password-reset-job', async (job) => {
   const { email, token } = job.data;
 
-  const url = `${process.env.AUTH_FRONTEND_PASSWORD_RESET_URL}?token=${token}&email=${email}`;
+  const url = `${config.frontendUrl}?token=${token}&email=${email}`;
 
-  const appName = process.env.APP_NAME;
+  const appName = config.name;
 
   await sendEmail(
     email,
@@ -27,7 +21,7 @@ queue.process('password-reset-job', async (job) => {
     {
       url,
       appName,
-      expires: process.env.AUTH_PASSWORD_RESET_EXPIRES_IN,
+      expires: config.password.expiresIn,
     },
   );
 });
